@@ -17,6 +17,9 @@ def get_best(lista, tam_lista):
         return lista[pos1]
     return lista[pos2]
 
+def crossover(pai, filho):
+    
+
 def genetico_binario(tam_populacao_inicial, n_geracoes):
     populacao_inicial = []
     for i in range(tam_populacao_inicial):
