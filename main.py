@@ -25,8 +25,18 @@ def crossover(lista, tam_lista):
         return lista[pai1]
     return lista[pai2]
 
+#Recebe o numero em DECIMANl e a quantidade de bits a ser representada em binario
+#Retorna o numero binario
 def dec_to_bin(int_dec, size_bin):
     return f"{int_dec:0{size_bin}b}"
+
+def bin_to_dec(str_bin):
+    return int(str_bin, 2)
+
+def decodificacao(bin_number, min, max, size_bin):
+    convert_bin = bin_to_dec(bin_number)
+    x = min + ((max - min) * (convert_bin / (2**size_bin  - 1)))
+    return x
 
 def genetico_binario(tam_populacao_inicial, n_geracoes):
     populacao_inicial = []
@@ -42,12 +52,8 @@ def genetico_binario(tam_populacao_inicial, n_geracoes):
         print(populacao_inicial)
         print(new_population)
 
-
 def main():
-    #genetico_binario(10, 10)
-    print("{0:022b}".format(2288967))
-    print("{0:022b}".format(2288967))
-    print(dec_to_bin(2288967,22))
+    print(decodificacao('0000101110110101000011', -1, 2, 22))
 
 
 
