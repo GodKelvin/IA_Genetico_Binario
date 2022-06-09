@@ -64,13 +64,13 @@ def populacao_inicial(tam_pop, tam_bit):
 
 def genetico_binario(tam_populacao_inicial, n_geracoes):
     populacao_inicial = []
-    for i in range(tam_populacao_inicial):
+    for _ in range(tam_populacao_inicial):
         populacao_inicial.append(random_value())
 
     geracao = 1
     while(geracao < n_geracoes):
         new_population = []
-        for i in range(tam_populacao_inicial):
+        for _ in range(tam_populacao_inicial):
             new_population.append(get_best(populacao_inicial, tam_populacao_inicial))
         
         print(populacao_inicial)
