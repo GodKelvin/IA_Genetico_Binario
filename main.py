@@ -36,6 +36,11 @@ def bin_to_dec(str_bin):
 def decodificacao(bin_number, min, max, size_bin):
     convert_bin = bin_to_dec(bin_number)
     x = min + ((max - min) * (convert_bin / (2**size_bin  - 1)))
+
+    if(x < min):
+        return min
+    if(x > max):
+        return max
     return x
 
 def genetico_binario(tam_populacao_inicial, n_geracoes):
@@ -53,7 +58,11 @@ def genetico_binario(tam_populacao_inicial, n_geracoes):
         print(new_population)
 
 def main():
-    print(decodificacao('0000101110110101000011', -1, 2, 22))
+    #Para fins de teste
+    #print(dec_to_bin(2288967, 22))
+    print(decodificacao('1000101110110101000111', -1, 2, 22))
+
+
 
 
 
