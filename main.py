@@ -35,22 +35,33 @@ def dec_to_bin(int_dec, size_bin):
 def bin_to_dec(str_bin):
     return int(str_bin, 2)
 
-def decodificacao(bin_number, min, max, size_bin):
-    convert_bin = bin_to_dec(bin_number)
-    x = min + ((max - min) * (convert_bin / (2**size_bin  - 1)))
 
-    if(x < min):
-        return min
-    if(x > max):
-        return max
-    return x
-
-
+#Converte um array binario em string
 def bin_to_str(array):
     bin_str = ""
     for i in range(len(array)):
         bin_str += str(array[i])
     return bin_str
+
+
+#Converte um array de binario para seu valor em decimal
+def array_bin_to_dec(array):
+    value_bin = bin_to_str(array)
+    value_dec = bin_to_dec(value_bin)
+    return value_dec
+
+def decodificacao(array_bin, min, max, size_bin):
+    #Converto o array para inteiro
+    convert_bin = array_bin_to_dec(array_bin)
+    x = min + ((max - min) * (convert_bin / (2**size_bin  - 1)))
+
+    # if(x < min):
+    #     return min
+    # if(x > max):
+    #     return max
+    return x
+
+
 
 def populacao_inicial(tam_pop, tam_bit):
     populacao = []
@@ -76,13 +87,22 @@ def genetico_binario(tam_populacao_inicial, n_geracoes):
         print(populacao_inicial)
         print(new_population)
 
+def show_value(lista):
+    for value in lista:
+        print(decodificacao(value))
+
 def main():
     #Para fins de teste
     #print(dec_to_bin(2288967, 22))
     #print(decodificacao('1000101110110101000111', -1, 2, 22))
-    lista = populacao_inicial(10, 3)
-    print(lista)
-    print(bin_to_str(lista[0]))
+    
+    #lista = populacao_inicial(10, 16)
+    #show_value(lista)
+
+    teste = [1, 1, 1, 1,0,0,1,1]
+    print(array_bin_to_dec(teste))
+
+
 
 
 
