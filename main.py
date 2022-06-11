@@ -5,7 +5,7 @@ from scipy import rand
 
 #Funcao a ser minimizada
 def fitness_function(x):
-    return math.cos(x) * (x + 2)
+    return math.cos(x) * x + 2
 
 #Intervalo de X
 def random_value():
@@ -85,8 +85,9 @@ def main():
     #teste = [1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,0,0,1,1,1]    
     #print(decodificacao(teste, -1, 2, 22))
     
-    lista = populacao_inicial(10, 16)
-    show_value(lista)
+    #lista = populacao_inicial(10, 16)
+    #show_value(lista)
+    print(fitness_function(-16))
 
 
 
