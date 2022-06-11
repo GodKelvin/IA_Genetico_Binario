@@ -141,27 +141,57 @@ def populacao_inicial(tam_pop, tam_bit):
 
 
 
-#Tamanho da populacao / Numero de geracoes / Quantidade de bits p/ cromossomo
+#Tamanho da populacao / Numero de geracoes / Quantidade de bits p/ cromossomo / valores min e max
+#retorna: #[0] = cromossomo, [1] = valor de x, [2] = valor de y
 def genetico_binario(tam_populacao_inicial, n_geracoes, qtd_bits, min, max):
     populacao = populacao_inicial(tam_populacao_inicial, qtd_bits)
     geracao = 0
     best_cromossomo = [0]
-    best_of_generation = []
     while(geracao < n_geracoes):
         #Salva o melhor valor da populacao
         best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
-        
+
         #Captura os pais via torneio
         pais = best_values(populacao.copy(), min, max, qtd_bits)
         #Gera uma nova populacao
         populacao = gera_filhos(pais.copy(), 0.6, 0.01, best_cromossomo.copy())
+        #best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
         geracao += 1
-    
     best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
     return [best_cromossomo, decodificacao(best_cromossomo, min, max, qtd_bits), fitness_function(decodificacao(best_cromossomo, min, max, qtd_bits))]
 
+def run_genetico_binario():
+    result_10 = []
+    result_20 = []
 
+    result_100 = []
+    for _ in range(10):
+        res_10 = genetico_binario(10, 10, 16, -20, 20)
+        res_20 = genetico_binario(10, 20, 16, -20, 20)
+        res_100 = genetico_binario(10, 100, 16, -20, 20)
 
+        #[0] = cromossomo, [1] = valor de x, [2] = valor de y
+        result_10.append(res_10[2])
+        result_20.append(res_20[2])
+        result_100.append(res_100[2])
+    
+    #Tirando a media dos menores valores encontrados
+    media_10 = 0
+    media_20 = 0
+    media_100 = 0
+    for i in range(10):
+        media_10 += result_10[i]
+        media_20 += result_20[i]
+        media_100 += result_100[i]
+    
+    media_10 = media_10 / 10
+    media_20 = media_20 / 10
+    media_100 = media_100 / 10
+    
+    print(media_10)
+    print(media_20)
+    print(media_100)
+        
 
 def main():
     #Para fins de teste
@@ -171,5 +201,6 @@ def main():
     #print(decodificacao(teste, -1, 2, 22))
     
     #Populacao / num de geracoes / tamanho do cromossomo, valor min e valor max
-    print(genetico_binario(10, 10, 16, -20, 20))
+    #print(genetico_binario(10, 10, 16, -20, 20))
+    run_genetico_binario()
 main()
