@@ -57,6 +57,7 @@ def elitismo(geracao, min, max, size_bin):
             cromossomo = value
             value_elite = value_cromossomo_avaliado
 
+    #print(cromossomo)
     return cromossomo
 
 #Selecao por torneio
@@ -64,7 +65,7 @@ def elitismo(geracao, min, max, size_bin):
 def new_generation(lista, min, max, qtd_bits):
     nova_geracao = []
     #Salvo o melhor valor para a proxima geracao
-    nova_geracao.append(elitismo(lista))
+    nova_geracao.append(elitismo(lista, min, max, qtd_bits))
     tam_geracao = len(lista)
     #-1 porque ja foi aplicado o elitismo
     for _ in range(tam_geracao-1):
@@ -73,9 +74,10 @@ def new_generation(lista, min, max, qtd_bits):
         value1 = decodificacao(lista[pos1], min, max, qtd_bits)
         value2 = decodificacao(lista[pos2], min, max, qtd_bits)
         if(value1 < value2):
-            nova_geracao.append(value1)
+            nova_geracao.append(lista[pos1])
         else:
-            nova_geracao.append(value2)
+            nova_geracao.append(lista[pos2])
+    
     return nova_geracao
 
 
@@ -99,22 +101,30 @@ def show_value(lista):
         y = fitness_function(x)
         print("%.5f \t\t %.3f" %(x, y))
 
+def show_populacao(populacao):
+    for value in populacao:
+        print(value)
 
 #Tamanho da populacao / Numero de geracoes / Quantidade de bits p/ cromossomo
 def genetico_binario(tam_populacao_inicial, n_geracoes, qtd_bits, min, max):
     populacao = populacao_inicial(tam_populacao_inicial, qtd_bits)
     #Como queremos o menor valor: colocar o elite com um valor alto
     geracao = 0
-    best_value = float('inf')
+    best_cromossomo = [0]
     while(geracao < n_geracoes):
-        best_value = elitismo(populacao, min, max, qtd_bits)
-        print(decodificacao(best_value, min, max, qtd_bits))
-        print(best_value)
-        show_value(populacao)
-        input()
+        best_cromossomo = elitismo(populacao, min, max, qtd_bits)
+        # print(len(populacao))
+        print(decodificacao(best_cromossomo, min, max, qtd_bits))
+        print(best_cromossomo)
+        # show_value(populacao)
+        #show_populacao(populacao)
+        print('-----------------------------------------------')
+        #input()
         populacao = new_generation(populacao, min, max, qtd_bits)
+        #print(populacao)
         #Aplicar crossover
         #Aplicar mutacao
+        geracao += 1
 
 
 
@@ -125,5 +135,5 @@ def main():
     #print(decodificacao(teste, -1, 2, 22))
     
     #Populacao / num de geracoes / tamanho do cromossomo
-    genetico_binario(10, 1, 16, -20, 20)
+    genetico_binario(10, 20, 16, -20, 20)
 main()
