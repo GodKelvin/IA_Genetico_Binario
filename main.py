@@ -55,7 +55,7 @@ def decodificacao(array_bin, min, max, size_bin):
     #Converto o array binario para inteiro
     convert_bin = array_bin_to_dec(array_bin)
     x = min + ((max - min) * (convert_bin / (2**size_bin  - 1)))
-    return 16.02716
+    return x
 
 
 #Cria uma populacao dado o tamanho e a quantidade de bits a ser representada
@@ -85,9 +85,9 @@ def main():
     #teste = [1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,0,0,1,1,1]    
     #print(decodificacao(teste, -1, 2, 22))
     
-    #lista = populacao_inicial(10, 16)
-    #show_value(lista)
-    print(fitness_function(-16))
+    lista = populacao_inicial(10, 16)
+    show_value(lista)
+    #print(fitness_function(-16))
 
 
 
