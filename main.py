@@ -1,8 +1,6 @@
 import math
 import random
 
-from scipy import rand
-
 #Funcao a ser minimizada
 def fitness_function(x):
     return math.cos(x) * x + 2
@@ -11,16 +9,7 @@ def fitness_function(x):
 def random_value():
     return random.uniform(-20, 20)
 
-
-#Selecao por torneio
-def get_best(lista, tam_lista):
-    pos1, pos2 = random.randint(0, tam_lista-1), random.randint(0, tam_lista-1)
-    if(lista[pos1] < lista[pos2]):
-        return lista[pos1]
-    return lista[pos2]
-
-
-#Alterar para selecao por roleto ao inves de torneio-----------------------------------------
+#Realizar crossover
 def crossover(lista, tam_lista):
     pai1, pai2 = random.randint(0, tam_lista-1), random.randint(0, tam_lista-1)
     if(lista[pai1] < lista[pai2]):
@@ -58,6 +47,40 @@ def decodificacao(array_bin, min, max, size_bin):
     return x
 
 
+def elitismo(geracao, min, max, size_bin):
+    value_elite = float('inf')
+    cromossomo = []
+    
+    for value in geracao:
+        value_cromossomo_avaliado = decodificacao(value, min, max, size_bin)
+        if(value_cromossomo_avaliado < value_elite):
+            cromossomo = value
+            value_elite = value_cromossomo_avaliado
+
+    return cromossomo
+
+#Selecao por torneio
+#Retorna uma lista com uma nova geracao
+def new_generation(lista, min, max, qtd_bits):
+    nova_geracao = []
+    #Salvo o melhor valor para a proxima geracao
+    nova_geracao.append(elitismo(lista))
+    tam_geracao = len(lista)
+    #-1 porque ja foi aplicado o elitismo
+    for _ in range(tam_geracao-1):
+        pos1, pos2 = random.randint(0, tam_geracao-1), random.randint(0, tam_geracao-1)
+        #Verifico qual melhor resultado com base no sorteio
+        value1 = decodificacao(lista[pos1], min, max, qtd_bits)
+        value2 = decodificacao(lista[pos2], min, max, qtd_bits)
+        if(value1 < value2):
+            nova_geracao.append(value1)
+        else:
+            nova_geracao.append(value2)
+    return nova_geracao
+
+
+
+
 #Cria uma populacao dado o tamanho e a quantidade de bits a ser representada
 def populacao_inicial(tam_pop, tam_bit):
     populacao = []
@@ -69,9 +92,6 @@ def populacao_inicial(tam_pop, tam_bit):
     
     return populacao
 
-#def genetico_binario(tam_populacao_inicial, n_geracoes):
-
-
 #Apenas para fins de debugger
 def show_value(lista):
     for value in lista:
@@ -79,20 +99,31 @@ def show_value(lista):
         y = fitness_function(x)
         print("%.5f \t\t %.3f" %(x, y))
 
+
+#Tamanho da populacao / Numero de geracoes / Quantidade de bits p/ cromossomo
+def genetico_binario(tam_populacao_inicial, n_geracoes, qtd_bits, min, max):
+    populacao = populacao_inicial(tam_populacao_inicial, qtd_bits)
+    #Como queremos o menor valor: colocar o elite com um valor alto
+    geracao = 0
+    best_value = float('inf')
+    while(geracao < n_geracoes):
+        best_value = elitismo(populacao, min, max, qtd_bits)
+        print(decodificacao(best_value, min, max, qtd_bits))
+        print(best_value)
+        show_value(populacao)
+        input()
+        populacao = new_generation(populacao, min, max, qtd_bits)
+        #Aplicar crossover
+        #Aplicar mutacao
+
+
+
 def main():
     #Para fins de teste
     #print(dec_to_bin(2288967, 22))
     #teste = [1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,0,0,1,1,1]    
     #print(decodificacao(teste, -1, 2, 22))
     
-    lista = populacao_inicial(10, 16)
-    show_value(lista)
-    #print(fitness_function(-16))
-
-
-
-
-
-
-
+    #Populacao / num de geracoes / tamanho do cromossomo
+    genetico_binario(10, 1, 16, -20, 20)
 main()
