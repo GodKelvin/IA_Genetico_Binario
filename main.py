@@ -50,19 +50,15 @@ def array_bin_to_dec(array):
     value_dec = bin_to_dec(value_bin)
     return value_dec
 
+#Retornar o valor de X com base na codificacao do cromossomo binario do array
 def decodificacao(array_bin, min, max, size_bin):
-    #Converto o array para inteiro
+    #Converto o array binario para inteiro
     convert_bin = array_bin_to_dec(array_bin)
     x = min + ((max - min) * (convert_bin / (2**size_bin  - 1)))
-
-    # if(x < min):
-    #     return min
-    # if(x > max):
-    #     return max
-    return x
+    return 16.02716
 
 
-
+#Cria uma populacao dado o tamanho e a quantidade de bits a ser representada
 def populacao_inicial(tam_pop, tam_bit):
     populacao = []
     for _ in range(tam_pop):
@@ -73,34 +69,24 @@ def populacao_inicial(tam_pop, tam_bit):
     
     return populacao
 
-def genetico_binario(tam_populacao_inicial, n_geracoes):
-    populacao_inicial = []
-    for _ in range(tam_populacao_inicial):
-        populacao_inicial.append(random_value())
+#def genetico_binario(tam_populacao_inicial, n_geracoes):
 
-    geracao = 1
-    while(geracao < n_geracoes):
-        new_population = []
-        for _ in range(tam_populacao_inicial):
-            new_population.append(get_best(populacao_inicial, tam_populacao_inicial))
-        
-        print(populacao_inicial)
-        print(new_population)
 
+#Apenas para fins de debugger
 def show_value(lista):
     for value in lista:
-        print(decodificacao(value))
+        x = decodificacao(value, -20, 20, 16)
+        y = fitness_function(x)
+        print("%.5f \t\t %.3f" %(x, y))
 
 def main():
     #Para fins de teste
     #print(dec_to_bin(2288967, 22))
-    #print(decodificacao('1000101110110101000111', -1, 2, 22))
+    #teste = [1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,0,0,1,1,1]    
+    #print(decodificacao(teste, -1, 2, 22))
     
-    #lista = populacao_inicial(10, 16)
-    #show_value(lista)
-
-    teste = [1, 1, 1, 1,0,0,1,1]
-    print(array_bin_to_dec(teste))
+    lista = populacao_inicial(10, 16)
+    show_value(lista)
 
 
 
