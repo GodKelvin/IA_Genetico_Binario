@@ -9,7 +9,7 @@ def fitness_function(x):
 
 def mutacao(cromossomo, taxa_mutacao):
     muta = random.uniform(0, 1)
-    if(muta >= taxa_mutacao):
+    if(muta <= taxa_mutacao):
         change_bit = random.randint(0, len(cromossomo)-1)
         if(cromossomo[change_bit]):
             cromossomo[change_bit] = 0
@@ -21,9 +21,10 @@ def mutacao(cromossomo, taxa_mutacao):
 def crossover(pai1, pai2, taxa_crossover):
     filho1 = 0
     filho2 = 0
-    cross = random.uniform(0, taxa_crossover)
-    if(cross >= taxa_crossover):
-        half_cromossomo = len(pai1) / 2
+    cross = random.uniform(0, 1)
+    if(cross <= taxa_crossover):
+        
+        half_cromossomo = int(len(pai1) / 2)
         filho1 = (pai1[:half_cromossomo] + pai2[half_cromossomo:])
         filho2= (pai1[half_cromossomo:] + pai2[:half_cromossomo])
     else:
