@@ -2,18 +2,6 @@ import math
 import random
 from pathlib import Path
 import matplotlib.pyplot as plt
-import pandas as pd
-
-#Apenas para fins de debugger
-def show_value(lista):
-    for value in lista:
-        x = decodificacao(value, -20, 20, 16)
-        y = fitness_function(x)
-        print("%f \t\t %f" %(x, y))
-
-def show_populacao(populacao):
-    for value in populacao:
-        print(value)
 
 #Funcao a ser minimizada
 def fitness_function(x):
@@ -43,6 +31,7 @@ def crossover(pai1, pai2, taxa_crossover):
         filho2 = pai2
 
     return filho1, filho2
+
 #Criacao de novos filhos aplicando crossover e mutacao
 def gera_filhos(pais, taxa_crossover, taxa_mutacao, best_cromossomo):
     filhos = []
@@ -65,11 +54,6 @@ def gera_filhos(pais, taxa_crossover, taxa_mutacao, best_cromossomo):
             filhos.append(filho2)
 
     return filhos
-
-#Recebe o numero em DECIMANl e a quantidade de bits a ser representada em binario
-#Retorna o numero binario
-def dec_to_bin(int_dec, size_bin):
-    return f"{int_dec:0{size_bin}b}"
 
 def bin_to_dec(str_bin):
     return int(str_bin, 2)
@@ -136,12 +120,9 @@ def populacao_inicial(tam_pop, tam_bit):
         populacao.append(new_cromossomo)
     
     return populacao
-
-
-
-
+    
 #Tamanho da populacao / Numero de geracoes / Quantidade de bits p/ cromossomo / valores min e max
-#retorna: #[0] = cromossomo, [1] = valor de x, [2] = valor de y
+#retorna: [0] = Array dos melhores resultados de cada geracao / o melhor resultado
 def genetico_binario(tam_populacao_inicial, n_geracoes, qtd_bits, min, max):
     populacao = populacao_inicial(tam_populacao_inicial, qtd_bits)
     geracao = 1
