@@ -144,22 +144,34 @@ def populacao_inicial(tam_pop, tam_bit):
 #retorna: #[0] = cromossomo, [1] = valor de x, [2] = valor de y
 def genetico_binario(tam_populacao_inicial, n_geracoes, qtd_bits, min, max):
     populacao = populacao_inicial(tam_populacao_inicial, qtd_bits)
-    geracao = 0
+    geracao = 1
     best_cromossomo = [0]
+    list_best_generation = []
+    #Salva o melhor valor da populacao
     while(geracao < n_geracoes):
-        #Salva o melhor valor da populacao
         best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
-
+        list_best_generation.append(fitness_function(decodificacao(best_cromossomo, min, max, qtd_bits)))
         #Captura os pais via torneio
         pais = best_values(populacao.copy(), min, max, qtd_bits)
         #Gera uma nova populacao
         populacao = gera_filhos(pais.copy(), 0.6, 0.01, best_cromossomo.copy())
-        #best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
         geracao += 1
     
     #Verificando a ultima geracao
     best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
-    return [best_cromossomo, decodificacao(best_cromossomo, min, max, qtd_bits), fitness_function(decodificacao(best_cromossomo, min, max, qtd_bits))]
+    list_best_generation.append(fitness_function(decodificacao(best_cromossomo, min, max, qtd_bits)))
+    return [list_best_generation, fitness_function(decodificacao(best_cromossomo, min, max, qtd_bits))]
+
+#Funcao para salvar os resultados obtidos a partir de determinada execucao
+def save_graph(x, result, best_result, leg):
+	plt.plot(x, result, label = "Media de cada iteracao")
+	plt.plot(x, best_result, label = "Melhor resultado")
+	plt.title(leg)
+	plt.xlabel("Iteração")
+	plt.ylabel("Gbest")
+	plt.legend()
+	plt.savefig("plot_graphs/%s.png" %leg)
+	plt.close()
 
 def run_genetico_binario(qtd_execucoes, tam_populacao):
     result_10 = []
@@ -170,24 +182,53 @@ def run_genetico_binario(qtd_execucoes, tam_populacao):
     best_result_20 = float('inf')
     best_result_100 = float('inf')
 
+    array_best_result_10 = []
+    array_best_result_20 = []
+    array_best_result_100 = []
+
+    media_iteration_10 = [0] * 10
+    media_iteration_20 = [0] * 20
+    media_iteration_100 = [0] * 100
+
     for _ in range(qtd_execucoes):
         res_10 = genetico_binario(tam_populacao, 10, 16, -20, 20)
         res_20 = genetico_binario(tam_populacao, 20, 16, -20, 20)
         res_100 = genetico_binario(tam_populacao, 100, 16, -20, 20)
 
-        #[0] = cromossomo, [1] = valor de x, [2] = valor de y
-        result_10.append(res_10[2])
-        result_20.append(res_20[2])
-        result_100.append(res_100[2])
+        #[0] = Lista dos melhores de cada geracao, [1] = valor de y
+        result_10.append(res_10[1])
+        result_20.append(res_20[1])
+        result_100.append(res_100[1])
 
-        if(res_10[2] < best_result_10):
-            best_result_10 = res_10[2]
+        if(res_10[1] < best_result_10):
+            best_result_10 = res_10[1]
+            array_best_result_10 = res_10[0]
 
-        if(res_20[2] < best_result_20):
-            best_result_20 = res_20[2]
+        if(res_20[1] < best_result_20):
+            best_result_20 = res_20[1]
+            array_best_result_20 = res_20[0]
 
-        if(res_100[2] < best_result_100):
-            best_result_100 = res_100[2]
+        if(res_100[1] < best_result_100):
+            best_result_100 = res_100[1]
+            array_best_result_100 = res_100[0]
+        
+        for i in range(10):
+            media_iteration_10[i] += res_10[1]
+        
+        for i in range(20):
+            media_iteration_20[i] += res_20[1]
+
+        for i in range(100):
+            media_iteration_100[i] += res_100[1]
+    
+    for i in range(10):
+        media_iteration_10[i] = media_iteration_10[i] / qtd_execucoes
+    
+    for i in range(20):
+        media_iteration_20[i] = media_iteration_20[i] / qtd_execucoes
+
+    for i in range(100):
+        media_iteration_100[i] = media_iteration_100[i] / qtd_execucoes
     
     #Tirando a media dos menores valores encontrados
     media_10 = 0
@@ -203,33 +244,26 @@ def run_genetico_binario(qtd_execucoes, tam_populacao):
     media_100 = media_100 / 10
     
     print("Melhor resultado: ")
-    print(best_result_10)
-    print(best_result_20)
-    print(best_result_100)
+    print("10 Geracoes: %s" %best_result_10)
+    print("20 Geracoes: %s" %best_result_20)
+    print("100 Geracoes: %s" %best_result_100)
+
     print("")
     print("Media:")
-    print(media_10)
-    print(media_20)
-    print(media_100)
+    print("10 Geracoes: %s" %media_10)
+    print("20 Geracoes: %s" %media_20)
+    print("100 Geracoes: %s" %media_100)
 
+    save_graph([x for x in range(10)], media_iteration_10, array_best_result_10, "10 geracoes")
+    save_graph([x for x in range(20)], media_iteration_20, array_best_result_20, "20 geracoes")
+    save_graph([x for x in range(100)], media_iteration_100, array_best_result_100, "100 geracoes")
 
         
 
 def main():
-    #Para fins de teste
-    #print(dec_to_bin(2288967, 22))
-    #teste = [1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,0,0,0,1,1,1]  
-    #teste = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]  
-    #print(decodificacao(teste, -1, 2, 22))
-    
-    #Populacao / num de geracoes / tamanho do cromossomo, valor min e valor max
-    #print(genetico_binario(10, 10, 16, -20, 20))
-
-    #Quantidade de execucoes / tamanho da populacao 
-
     #Criando a pasta "plot_graphs" se nao existir
     path = Path("plot_graphs")
     path.mkdir(exist_ok=True)
-
     run_genetico_binario(10, 10)
+    print("\n-> Checar pasta: plot_graphs")
 main()
