@@ -1,6 +1,8 @@
 import math
 import random
-
+from pathlib import Path
+import matplotlib.pyplot as plt
+import pandas as pd
 
 #Apenas para fins de debugger
 def show_value(lista):
@@ -62,9 +64,6 @@ def gera_filhos(pais, taxa_crossover, taxa_mutacao, best_cromossomo):
         if(len(filhos) < len(pais)):
             filhos.append(filho2)
 
-        #show_populacao(filhos)
-        #print(best_cromossomo)
-        #print("-----")
     return filhos
 
 #Recebe o numero em DECIMANl e a quantidade de bits a ser representada em binario
@@ -157,29 +156,44 @@ def genetico_binario(tam_populacao_inicial, n_geracoes, qtd_bits, min, max):
         populacao = gera_filhos(pais.copy(), 0.6, 0.01, best_cromossomo.copy())
         #best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
         geracao += 1
+    
+    #Verificando a ultima geracao
     best_cromossomo = elitismo(populacao.copy(), min, max, qtd_bits)
     return [best_cromossomo, decodificacao(best_cromossomo, min, max, qtd_bits), fitness_function(decodificacao(best_cromossomo, min, max, qtd_bits))]
 
-def run_genetico_binario():
+def run_genetico_binario(qtd_execucoes, tam_populacao):
     result_10 = []
     result_20 = []
-
     result_100 = []
-    for _ in range(10):
-        res_10 = genetico_binario(10, 10, 16, -20, 20)
-        res_20 = genetico_binario(10, 20, 16, -20, 20)
-        res_100 = genetico_binario(10, 100, 16, -20, 20)
+
+    best_result_10 = float('inf')
+    best_result_20 = float('inf')
+    best_result_100 = float('inf')
+
+    for _ in range(qtd_execucoes):
+        res_10 = genetico_binario(tam_populacao, 10, 16, -20, 20)
+        res_20 = genetico_binario(tam_populacao, 20, 16, -20, 20)
+        res_100 = genetico_binario(tam_populacao, 100, 16, -20, 20)
 
         #[0] = cromossomo, [1] = valor de x, [2] = valor de y
         result_10.append(res_10[2])
         result_20.append(res_20[2])
         result_100.append(res_100[2])
+
+        if(res_10[2] < best_result_10):
+            best_result_10 = res_10[2]
+
+        if(res_20[2] < best_result_20):
+            best_result_20 = res_20[2]
+
+        if(res_100[2] < best_result_100):
+            best_result_100 = res_100[2]
     
     #Tirando a media dos menores valores encontrados
     media_10 = 0
     media_20 = 0
     media_100 = 0
-    for i in range(10):
+    for i in range(qtd_execucoes):
         media_10 += result_10[i]
         media_20 += result_20[i]
         media_100 += result_100[i]
@@ -188,9 +202,17 @@ def run_genetico_binario():
     media_20 = media_20 / 10
     media_100 = media_100 / 10
     
+    print("Melhor resultado: ")
+    print(best_result_10)
+    print(best_result_20)
+    print(best_result_100)
+    print("")
+    print("Media:")
     print(media_10)
     print(media_20)
     print(media_100)
+
+
         
 
 def main():
@@ -202,5 +224,12 @@ def main():
     
     #Populacao / num de geracoes / tamanho do cromossomo, valor min e valor max
     #print(genetico_binario(10, 10, 16, -20, 20))
-    run_genetico_binario()
+
+    #Quantidade de execucoes / tamanho da populacao 
+
+    #Criando a pasta "plot_graphs" se nao existir
+    path = Path("plot_graphs")
+    path.mkdir(exist_ok=True)
+
+    run_genetico_binario(10, 10)
 main()
