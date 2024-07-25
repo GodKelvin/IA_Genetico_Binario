@@ -1,4 +1,4 @@
-# PAlgoritmo Genético
+# Algoritmo Genético
 Atividade avaliativa realizada durante a disciplina de inteligência Artificial(2022/1) do curso Bacharelado em Sistemas de Informação(BSI) do IFES - Campus Serra.
 
 ### Aluno: Kelvin Lehrback
